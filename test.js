@@ -25,11 +25,6 @@ var get_group_options = {
   method: "GET"
 }
 
-app.get('/', function (req, res){
-  console.log("hitting the root");
-  res.send('Hello World!');
-});
-
 app.post('/textprocess', function(req, res){
   //var outputText = querifyText(req.body.text);
   if(req.body.name != "Bob"){
@@ -84,6 +79,9 @@ function checkForCommand(inText){
   else if(inText.indexOf("Rides") > -1 || inText.indexOf("rides") > -1){
     return "ride";
   }
+  else if(inText.indexOf("Bob help") > -1 || inText.indexOf("Bob Help") > -1){
+    return "help";
+  }
   else{
     return "";
   }
@@ -106,6 +104,9 @@ function processCommand(incomingMessage, commandType){
         break;
     case "table":
         result = tableUnflip();
+        break;
+    case "help":
+        result = printHelp();
         break;
     default:
         console.log("Something went so wrong.");
@@ -204,3 +205,18 @@ function tableUnflip(){
   });
   return converted;
 };
+
+function printHelp(){
+  // Quickly.
+  var commands="This is what I can do:\n" +
+  "Command                      - echo whatever you put after command.\n" +
+  "Boob                         - tell Andrew to cut that out.\n" +
+  "(╯°□°）╯︵ ┻━┻                - Bob will unflip your table for you.\n"+
+  "rides                        - pick a random person in the group to drive.\n"+
+  "Bob Help                     - Print this help."
+  var converted = JSON.stringify({
+    bot_id: "e6bfe26f62a4b141c7bdd76425",
+    text: commands
+  });
+  return converted;
+}
