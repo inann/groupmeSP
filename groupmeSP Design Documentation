@@ -1,0 +1,13 @@
+Bob, the GroupMe bot: Design Documentation
+
+Revised: 9/3/2015
+
+Purpose: fuck shit up
+
+High-level entities: get messages, make tokens
+
+Low-level design and relationships: Feed tokens to token machine
+
+Benefits, assumptions, risks/issues: Skynet
+
+Conclusion: this bot will rek u m8
