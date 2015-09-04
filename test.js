@@ -25,6 +25,20 @@ var get_group_options = {
   method: "GET"
 }
 
+// For the method below here are my proposed changes:
+  // Here's what I want to do:
+    // ...
+    // var parsedText  = parseIncomingText(incomingText);
+    // var commandType = checkForCommand (parsedText);
+    // if(commandType) {
+    // var outputText = processCommand (parsedText, commandType);
+    // ...
+    // 
+  // My issue with these changes is that it requires the following:
+    // A new method called parseIncomingText(incomingText)
+    // A change to checkForCommand(incomingText) to checkForCommand(parsedText)
+    // A change to processCommand (incomingText, commandType) to processCommand(parsedText, commandType)
+
 app.post('/textprocess', function(req, res){
   //var outputText = querifyText(req.body.text);
   if(req.body.name != "Bob"){
@@ -60,6 +74,15 @@ callbackFunction = function(response){
   response.on('end', function () {
     console.log(str);
   });
+};
+
+// Parse the incoming text so that each word is read as a token.
+// This will break the incoming text message into a series of tokens
+// in a list. A message would be broken as follows:
+// Input: "The quick brown fox ".
+// Output: {["The"] ["quick"] ["brown"] ["fox"]}
+function parseIncomingText(inText){
+	// get money
 };
 
 // Check to see if we should send the message; this
