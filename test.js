@@ -72,6 +72,19 @@ callbackFunction = function(response){
 function checkForCommand(inText){
 	
 	// parse incoming text
+	var parsedText = inText.split(" ");
+	
+	// Let's check for "hey bob"
+	var numberOfTokens = parsedText.length;
+	for(var i = 0; i < numberOfTokens; i++) {
+		if(parsedText[i].indexOf("Hey") > -1 || parsedText.indexOf("hey") > -1){
+			if (parsedText[i+1].indexOf("Bob") > -1 || parsedText[i+1].indexOf("bob") > -1){
+				
+			}
+		}	
+				
+	}
+	
 	
   if(inText.indexOf("command") > -1 || inText.indexOf("Command") > -1){
     // The text contains the word we're looking for (command for now)
