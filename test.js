@@ -71,8 +71,8 @@ callbackFunction = function(response){
 // is done by checking for certain keywords.
 function checkForCommand(inText){
 	
-	//If the message does not have "Hey Bob" or "hey bob", just ignore it right away
-	if (!req.body.inText.contains("Hey Bob") || !req.body.inText.contains("hey bob")){
+	//If the message does not have "hey bob" (with any caps) just ignore it right away
+	if (req.body.inText.toLower.indexOf("hey bob") = -1)
 		return "";
 	}
 	
