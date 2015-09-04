@@ -72,7 +72,6 @@ callbackFunction = function(response){
 function checkForCommand(inText){
 	
 	// parse incoming text
-	var parsedText = inText.split(" ");
 	
   if(inText.indexOf("command") > -1 || inText.indexOf("Command") > -1){
     // The text contains the word we're looking for (command for now)
