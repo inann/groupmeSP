@@ -209,7 +209,7 @@ function tableUnflip(){
 function printHelp(){
   // Quickly.
   var commands="This is what I can do:\n" +
-  "Command                      - echo whatever you put after command.\n" +
+  "Command[text]                - echo whatever is in [text].\n" +
   "Boob                         - tell Andrew to cut that out.\n" +
   "(╯°□°）╯︵ ┻━┻                - Bob will unflip your table for you.\n"+
   "rides                        - pick a random person in the group to drive.\n"+
