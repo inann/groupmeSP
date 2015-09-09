@@ -72,7 +72,7 @@ callbackFunction = function(response){
 function checkForCommand(inText){
 	
 	//If the message does not have "hey bob" (with any caps) just ignore it right away
-	if (req.body.inText.toLower.indexOf("hey bob") = -1)
+	if (inText.toLower.indexOf("hey bob") == -1)
 		return "";
 	}
 	
