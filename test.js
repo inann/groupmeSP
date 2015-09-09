@@ -70,17 +70,17 @@ callbackFunction = function(response){
 // Check to see if we should send the message; this
 // is done by checking for certain keywords.
 function checkForCommand(inText){
-	
-	//If the message does not have "hey bob" (with any caps) just ignore it right away
-	if (inText.toLower.indexOf("hey bob") == -1)
-		return "";
-	}
-	
-	// parse incoming text
-	var parsedText = inText.split(" ");
-	
-	
-	
+  
+  //If the message does not have "hey bob" (with any caps) just ignore it right away
+  if (inText.toLower.indexOf("hey bob") == -1){
+    return "";
+  }
+  
+  // parse incoming text
+  var parsedText = inText.split(" ");
+  
+  
+  
   if(inText.indexOf("command") > -1 || inText.indexOf("Command") > -1){
     // The text contains the word we're looking for (command for now)
     // This can be extended to a series of checks for different commands
