@@ -308,7 +308,7 @@ function checkWeather(location){
   
   // Now, before we send back the message, we start a callback
   // that we can have send a message at a later time.
-  get_weather_options.path = get_weather_options.path + location + "&units=imperial"
+  get_weather_options.path = get_weather_options.path + location + "&units=imperial&APPID=3dc624292d12c666824acad2eec8bbcb"
   
   var get_weather = https.request(get_weather_options, function(res){
     var body = '';
