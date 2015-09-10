@@ -110,10 +110,10 @@ function checkForCommand(inText){
         return "command";
         break;
     case 1:
-        return "boob";
+        return "andrew";
         break;
     case 2:
-        return "rides";
+        return "ride";
         break;
     case 3:
         return "help";
