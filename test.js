@@ -10,6 +10,15 @@ var headers = {
   'Content-Type': 'application/json',
 }
 
+var COMMANDS = [
+  "command",
+  "boob",
+  "rides",
+  "help",
+  "(╯°□°）╯︵",
+  "┻━┻"
+];
+
 // Variable holding GroupMe options.
 var post_options = {
   host: "api.groupme.com",
@@ -24,6 +33,14 @@ var get_group_options = {
   path: "/v3/groups/12730452?token=7EW2z2X3PkaQiKXqnM1NBJoadUU5uPgcBYVoKkIF",
   method: "GET"
 }
+
+// TESTING ENDPOINT. ONLY COMMENT IT IN WHEN NECESSARY.
+// app.post('/test', function(req, res){
+//   console.log("Testing with incoming string.");
+//   console.log("Text = " + req.body.text);
+//   console.log("Result = " + checkForCommand(req.body.text));
+//   res.send('hello world');
+// });
 
 app.post('/textprocess', function(req, res){
   //var outputText = querifyText(req.body.text);
@@ -78,28 +95,41 @@ function checkForCommand(inText){
   
   // parse incoming text
   var parsedText = inText.split(" ");
+  // Here we will compare it to the established constant array. The array will
+  // have to be updated per command.
+  var resultIndex = -1;
+  for ( var i = 0; i < parsedText.length; i++ ) {
+    if ( COMMANDS.indexOf(parsedText[i]) != -1 ){
+      resultIndex = COMMANDS.indexOf(parsedText[i]);
+      break;
+    }
+  }
   
-  
-  
-  if(inText.indexOf("command") > -1 || inText.indexOf("Command") > -1){
-    // The text contains the word we're looking for (command for now)
-    // This can be extended to a series of checks for different commands
-    return "command";
-  }
-  else if (inText.indexOf("boob") > -1 || inText.indexOf("Boob") > -1){
-    return "andrew";
-  }
-  else if (inText.indexOf("(╯°□°）╯︵ ┻━┻") > -1){
-    return "table";
-  }
-  else if(inText.indexOf("Rides") > -1 || inText.indexOf("rides") > -1){
-    return "ride";
-  }
-  else if(inText.indexOf("Bob help") > -1 || inText.indexOf("Bob Help") > -1){
-    return "help";
-  }
-  else{
-    return "";
+  switch ( resultIndex ){
+    case 0:
+        return "command";
+        break;
+    case 1:
+        return "boob";
+        break;
+    case 2:
+        return "rides";
+        break;
+    case 3:
+        return "help";
+        break;
+    case 4:
+        var flipperIndex = parsedText.indexOf(COMMANDS[4]);
+        var tableIndex = parsedText.indexOf(COMMANDS[5]);
+        if ( flipperIndex === ( tableIndex - 1 )){
+          return "table";
+        } else {
+          return "fake_flip";
+        }
+        break;
+    default:
+        return "";
+        break;
   }
 };
 
@@ -123,6 +153,9 @@ function processCommand(incomingMessage, commandType){
         break;
     case "help":
         result = printHelp();
+        break;
+    case "fake_flip":
+        result = fakeFlip();
         break;
     default:
         console.log("Something went so wrong.");
@@ -233,6 +266,16 @@ function printHelp(){
   var converted = JSON.stringify({
     bot_id: "e6bfe26f62a4b141c7bdd76425",
     text: commands
+  });
+  return converted;
+};
+
+function fakeFlip(){
+  // Stubs
+  var message = "You didn't flip a table gai. You need to flip a table.";
+  var converted = JSON.stringify({
+    bot_id: "e6bfe26f62a4b141c7bdd76425",
+    text: message
   });
   return converted;
 }
