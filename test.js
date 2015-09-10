@@ -309,21 +309,21 @@ function checkWeather(location){
   // Now, before we send back the message, we start a callback
   // that we can have send a message at a later time.
   get_weather_options.path = get_weather_options.path + location + "&units=imperial&APPID=3dc624292d12c666824acad2eec8bbcb"
-  
-  var get_weather = https.request(get_weather_options, function(res){
-    var body = '';
-    res.on('data', function(d){
-      body += d;
-    });
-    res.on('end', function(){
-      var json_body = JSON.parse(body);
-      //console.log(json_body);
-      grabWeatherResults(json_body);
-      //console.log('BODY: ' + body);
-    });
-  });
-  //post_to_group.write(outputText);
-  get_weather.end();
+  console.log(get_weather_options);
+  // var get_weather = https.request(get_weather_options, function(res){
+  //   var body = '';
+  //   res.on('data', function(d){
+  //     body += d;
+  //   });
+  //   res.on('end', function(){
+  //     var json_body = JSON.parse(body);
+  //     //console.log(json_body);
+  //     grabWeatherResults(json_body);
+  //     //console.log('BODY: ' + body);
+  //   });
+  // });
+  // //post_to_group.write(outputText);
+  // get_weather.end();
   
   return converted;
 };
