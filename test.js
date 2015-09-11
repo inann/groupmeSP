@@ -317,7 +317,7 @@ function checkWeather(location){
     });
     res.on('end', function(){
       var json_body = JSON.parse(body);
-      console.log(json_body);
+      //console.log(json_body);
       grabWeatherResults(json_body);
       //console.log('BODY: ' + body);
     });
