@@ -331,7 +331,13 @@ function checkWeather(location){
 
 function grabWeatherResults(json_results){
   // Parse out the temperature, then send it to the group.
-  var message = "The weather in " + json_results.name + " is " + json_results.main.temp + " Fahrenheit";
+  var message = ""
+  if ( json_results.main.temp ){
+    message = "The weather in " + json_results.name + " is " + json_results.main.temp + " Fahrenheit";
+  } else {
+    message = "Woops, that doesn't seem to be a location."
+  }
+  
   var outputText = JSON.stringify({
     bot_id: "e6bfe26f62a4b141c7bdd76425",
     text: message
