@@ -314,11 +314,13 @@ function checkWeather(location){
   var get_weather = http.request(get_weather_options, function(res){
     var body = '';
     res.on('data', function(d){
+      console.log("got data: " + d);
       body += d;
     });
     res.on('end', function(){
-      var json_body = JSON.parse(body);
       console.log("request finished");
+      console.log(body);
+      var json_body = JSON.parse(body);
       console.log(json_body);
       grabWeatherResults(json_body);
       //console.log('BODY: ' + body);
