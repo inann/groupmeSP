@@ -16,7 +16,8 @@ var COMMANDS = [
   "rides",
   "help",
   "(╯°□°）╯︵",
-  "┻━┻"
+  "┻━┻",
+  "weather"
 ];
 
 // Variable holding GroupMe options.
@@ -34,6 +35,13 @@ var get_group_options = {
   method: "GET"
 }
 
+// GET Options for weather
+var get_weather_options = {
+  host: "api.openweathermap.org",
+  path: "/data/2.5/weather?q=",
+  method: "GET"
+}
+
 // TESTING ENDPOINT. ONLY COMMENT IT IN WHEN NECESSARY.
 // app.post('/test', function(req, res){
 //   console.log("Testing with incoming string.");
@@ -47,7 +55,7 @@ app.post('/textprocess', function(req, res){
   if(req.body.name != "Bob"){
     var incomingText = req.body.text;
     var commandType = checkForCommand(incomingText);
-    if(commandType){
+    if(commandType && commandType != "weather"){
       var outputText = processCommand(incomingText, commandType);
       if(commandType != "ride"){
         var post_to_group = https.request(post_options, callbackFunction);
@@ -99,7 +107,7 @@ function checkForCommand(inText){
   // have to be updated per command.
   var resultIndex = -1;
   for ( var i = 0; i < parsedText.length; i++ ) {
-    if ( COMMANDS.indexOf(parsedText[i]) != -1 ){
+    if ( COMMANDS.indexOf(parsedText[i].toLowerCase()) != -1 ){
       resultIndex = COMMANDS.indexOf(parsedText[i]);
       break;
     }
@@ -127,6 +135,13 @@ function checkForCommand(inText){
           return "fake_flip";
         }
         break;
+    case 6:
+    //// OMG THIS IS SO HACKY WTF.
+    // We should try to do all of the commands in this way, essentially
+    // removing the 'processCommand' function. This is the first step along the
+    // way; eventually we should remove the check above.
+        checkWeather(parsedText[parsedText.indexOf(COMMANDS[6]) + 2]);
+        return "weather";
     default:
         return "";
         break;
@@ -262,7 +277,8 @@ function printHelp(){
   "Boob                         - tell Andrew to cut that out.\n" +
   "(╯°□°）╯︵ ┻━┻                - Bob will unflip your table for you.\n"+
   "rides                        - pick a random person in the group to drive.\n"+
-  "Bob Help                     - Print this help."
+  "Bob Help                     - Print this help.\n"
+  "weather for [location]       - Gets the current weather in [location] in Fahrenheit\n"
   var converted = JSON.stringify({
     bot_id: "e6bfe26f62a4b141c7bdd76425",
     text: commands
@@ -278,4 +294,56 @@ function fakeFlip(){
     text: message
   });
   return converted;
-}
+};
+
+function checkWeather(location){
+  // Here we use the Get options, set up a call to groups
+  // so that we can get users, then call the callback()
+  // First things first. Make a call to the groupme API for the group.
+  // DO THIS IF WE DON'T ALREADY HAVE A LIST FIRST.
+  var message = "Please wait:";
+  var converted = JSON.stringify({
+    bot_id: "e6bfe26f62a4b141c7bdd76425",
+    text: message
+  });
+  
+  // Now, before we send back the message, we start a callback
+  // that we can have send a message at a later time.
+  get_weather_options.path = get_weather_options.path + location + "&units=imperial&APPID=3dc624292d12c666824acad2eec8bbcb"
+  console.log(get_weather_options);
+  var get_weather = http.request(get_weather_options, function(res){
+    var body = '';
+    res.on('data', function(d){
+      body += d;
+    });
+    res.on('end', function(){
+      var json_body = JSON.parse(body);
+      //console.log(json_body);
+      grabWeatherResults(json_body);
+      //console.log('BODY: ' + body);
+    });
+  });
+  //post_to_group.write(outputText);
+  get_weather.end();
+  
+  return converted;
+};
+
+function grabWeatherResults(json_results){
+  // Parse out the temperature, then send it to the group.
+  var message = ""
+  if ( json_results.main.temp ){
+    message = "The weather in " + json_results.name + " is " + json_results.main.temp + " Fahrenheit";
+  } else {
+    message = "Woops, that doesn't seem to be a location."
+  }
+  
+  var outputText = JSON.stringify({
+    bot_id: "e6bfe26f62a4b141c7bdd76425",
+    text: message
+    //text: "There are " + number_of_users + " users"
+  });
+  var post_to_group = https.request(post_options, callbackFunction);
+  post_to_group.write(outputText);
+  post_to_group.end();
+};
