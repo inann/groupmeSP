@@ -310,7 +310,7 @@ function checkWeather(location){
   // that we can have send a message at a later time.
   get_weather_options.path = get_weather_options.path + location + "&units=imperial&APPID=3dc624292d12c666824acad2eec8bbcb"
   console.log(get_weather_options);
-  var get_weather = https.request(get_weather_options, function(res){
+  var get_weather = http.request(get_weather_options, function(res){
     var body = '';
     res.on('data', function(d){
       body += d;
