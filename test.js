@@ -277,7 +277,8 @@ function printHelp(){
   "Boob                         - tell Andrew to cut that out.\n" +
   "(╯°□°）╯︵ ┻━┻                - Bob will unflip your table for you.\n"+
   "rides                        - pick a random person in the group to drive.\n"+
-  "Bob Help                     - Print this help."
+  "Bob Help                     - Print this help.\n"
+  "weather for [location]       - Gets the current weather in [location] in Fahrenheit\n"
   var converted = JSON.stringify({
     bot_id: "e6bfe26f62a4b141c7bdd76425",
     text: commands
