@@ -323,6 +323,9 @@ function checkWeather(location){
       //console.log('BODY: ' + body);
     });
   });
+  get_weather.on('error', function(e) {
+    console.log("The issue: " + e.message);
+  });
   //post_to_group.write(outputText);
   get_weather.end();
   
