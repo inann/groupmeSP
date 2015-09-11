@@ -309,7 +309,7 @@ function checkWeather(location){
   
   // Now, before we send back the message, we start a callback
   // that we can have send a message at a later time.
-  get_weather_options.path = get_weather_options.path + location + "&units=imperial&APPID=3dc624292d12c666824acad2eec8bbcb"
+  get_weather_options.path = "/data/2.5/weather?q=" + location + "&units=imperial&APPID=3dc624292d12c666824acad2eec8bbcb"
   console.log(get_weather_options);
   var get_weather = http.request(get_weather_options, function(res){
     var body = '';
@@ -332,7 +332,7 @@ function checkWeather(location){
 function grabWeatherResults(json_results){
   // Parse out the temperature, then send it to the group.
   var message = ""
-  if ( json_results.main.temp ){
+  if ( json_results.main ){
     message = "The weather in " + json_results.name + " is " + json_results.main.temp + " Fahrenheit";
   } else {
     message = "Woops, that doesn't seem to be a location."
