@@ -318,7 +318,8 @@ function checkWeather(location){
     });
     res.on('end', function(){
       var json_body = JSON.parse(body);
-      //console.log(json_body);
+      console.log("request finished");
+      console.log(json_body);
       grabWeatherResults(json_body);
       //console.log('BODY: ' + body);
     });
@@ -334,6 +335,8 @@ function checkWeather(location){
 
 function grabWeatherResults(json_results){
   // Parse out the temperature, then send it to the group.
+  console.log("Trying to parse out results.");
+  console.log(json_results);
   var message = ""
   if ( json_results.main ){
     message = "The weather in " + json_results.name + " is " + json_results.main.temp + " Fahrenheit";
