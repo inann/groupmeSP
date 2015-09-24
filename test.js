@@ -103,10 +103,30 @@ function checkForCommand(inText){
   
   // parse incoming text
   var parsedText = inText.split(" ");
+  // Since we want Bob to not check for anything, we will make sure that the
+  // token we found isn't before 'hey bob'. We'll do this by finding the 'token 
+  // index' of that phrase.
+  
+  var bobIndex = 0;
+  for ( var i = 0; i < parsedText.length; i++ ) {
+    if ( parsedText[i].toLowerCase() == "hey" && (i != parsedText.length -1) ){
+      if ( parsedText[i+1].toLowerCase() == "bob"){
+        bobIndex = i;
+        break;
+      }
+      else{
+        continue;
+      }
+    }
+  }
+  // We know that there has to be a 'Hey Bob' index, since we initially check to
+  // see that this is part of the passed in message. Therefore, we can depend on
+  // this information being available.
+  
   // Here we will compare it to the established constant array. The array will
   // have to be updated per command.
   var resultIndex = -1;
-  for ( var i = 0; i < parsedText.length; i++ ) {
+  for ( var i = bobIndex; i < parsedText.length; i++ ) {
     if ( COMMANDS.indexOf(parsedText[i].toLowerCase()) != -1 ){
       resultIndex = COMMANDS.indexOf(parsedText[i]);
       break;
