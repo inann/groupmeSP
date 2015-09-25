@@ -46,8 +46,8 @@ var get_weather_options = {
 // app.post('/test', function(req, res){
 //   console.log("Testing with incoming string.");
 //   console.log("Text = " + req.body.text);
-//   console.log("Result = " + checkForCommand(req.body.text));
-//   res.send('hello world');
+//   console.log("processCommand = " + processCommand(req.body.text, "command"));
+//   res.send('');
 // });
 
 app.post('/textprocess', function(req, res){
@@ -180,7 +180,7 @@ function processCommand(incomingMessage, commandType){
 };
 
 function dealWithCommand(incomingMessage){
-  var message = "I will now " + incomingMessage.substring(incomingMessage.indexOf("command") + 7);
+  var message = "I will now" + incomingMessage.substring(incomingMessage.toLowerCase().indexOf("command") + 7);
   var converted = JSON.stringify({
     bot_id: "e6bfe26f62a4b141c7bdd76425",
     text: message
