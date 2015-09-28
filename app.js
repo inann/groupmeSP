@@ -156,7 +156,6 @@ function checkForCommand(inText){
         }
         break;
     case 6:
-    //// OMG THIS IS SO HACKY WTF.
     // We should try to do all of the commands in this way, essentially
     // removing the 'processCommand' function. This is the first step along the
     // way; eventually we should remove the check above.
