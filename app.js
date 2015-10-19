@@ -55,13 +55,11 @@ app.post('/textprocess', function(req, res){
   if(req.body.name != "Bob"){
     var incomingText = req.body.text;
     var commandType = checkForCommand(incomingText);
-    if(commandType && commandType != "weather"){
+    if(commandType && commandType != "weather" && commandType != "ride"){
       var outputText = processCommand(incomingText, commandType);
-      if(commandType != "ride"){
-        var post_to_group = https.request(post_options, callbackFunction);
-        post_to_group.write(outputText);
-        post_to_group.end();
-      }
+      var post_to_group = https.request(post_options, callbackFunction);
+      post_to_group.write(outputText);
+      post_to_group.end();
     }
   };
 });
@@ -141,6 +139,7 @@ function checkForCommand(inText){
         return "andrew";
         break;
     case 2:
+        setupRides();
         return "ride";
         break;
     case 3:
