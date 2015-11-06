@@ -17,7 +17,8 @@ var COMMANDS = [
   "help",
   "(╯°□°）╯︵",
   "┻━┻",
-  "weather"
+  "weather",
+  "giphy"
 ];
 
 // Variable holding GroupMe options.
@@ -34,6 +35,16 @@ var get_group_options = {
   path: "/v3/groups/12730452?token=7EW2z2X3PkaQiKXqnM1NBJoadUU5uPgcBYVoKkIF",
   method: "GET"
 }
+
+// Giphy Options
+var giphy_options = {
+  host: "api.giphy.com",
+  path: "/v1/gifs/random?api_key=" + GIPHY_API_KEY,
+  method: "GET"
+}
+
+// Beta API key
+var GIPHY_API_KEY = "dc6zaTOxFJmzC"
 
 // GET Options for weather
 var get_weather_options = {
@@ -55,7 +66,7 @@ app.post('/textprocess', function(req, res){
   if(req.body.name != "Bob"){
     var incomingText = req.body.text;
     var commandType = checkForCommand(incomingText);
-    if(commandType && commandType != "weather" && commandType != "ride"){
+    if(commandType && commandType != "weather" && commandType != "ride" && commandType != "giphy"){
       var outputText = processCommand(incomingText, commandType);
       var post_to_group = https.request(post_options, callbackFunction);
       post_to_group.write(outputText);
@@ -160,6 +171,11 @@ function checkForCommand(inText){
     // way; eventually we should remove the check above.
         checkWeather(parsedText[parsedText.indexOf(COMMANDS[6]) + 2]);
         return "weather";
+        break;
+    case 7:
+        giphySearch(inText.substring(inText.toLowerCase().indexOf("giphy") + 5));//parsedText[parsedText.indexOf(COMMANDS[7]) + 1]);
+        return "giphy";
+        break;
     default:
         return "";
         break;
@@ -349,7 +365,7 @@ function checkWeather(location){
 
 function grabWeatherResults(json_results){
   // Parse out the temperature, then send it to the group.
-  var message = ""
+  var message = "";
   if ( json_results.main ){
     message = "The weather in " + json_results.name + " is " + json_results.main.temp + " Fahrenheit";
   } else {
@@ -365,3 +381,37 @@ function grabWeatherResults(json_results){
   post_to_group.write(outputText);
   post_to_group.end();
 };
+
+function giphySearch(tag_string){
+  var sanitized_tag_string = tag_string.replace(" ", "+").replace(/[.,-\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+  console.log(sanitized_tag_string);
+  giphy_options.path = giphy_options.path + "&tag=" + sanitized_tag_string;
+  var get_giphy_random = http.request(giphy_options, function(res){
+    var body = '';
+    res.on('data', function(d){
+      body += d;
+    });
+    res.on('end', function(){
+      var json_body = JSON.parse(body);
+      placeGiphyResults(json_body);
+    });
+  });
+  get_giphy_random.end();
+};
+
+function placeGiphyResults(json_results){
+  var message = "";
+  if (json_results.data){
+    message = json_results.data.image_url;
+  } else {
+    message = 'failed to get gif';
+  }
+  
+  var sending_text = JSON.stringify({
+    bot_id: "e6bfe26f62a4b141c7bdd76425",
+    text: message
+  });
+  var post_to_group = https.request(post_options, callbackFunction);
+  post_to_group.write(sending_text);
+  post_to_group.end();
+}
