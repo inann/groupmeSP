@@ -389,6 +389,7 @@ function giphySearch(tag_string){
   }
   console.log(sanitized_tag_string);
   giphy_options.path = giphy_options.path + "&tag=" + sanitized_tag_string;
+  console.log(giphy_options.path);
   var get_giphy_random = http.request(giphy_options, function(res){
     var body = '';
     res.on('data', function(d){
