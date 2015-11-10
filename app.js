@@ -383,7 +383,10 @@ function grabWeatherResults(json_results){
 };
 
 function giphySearch(tag_string){
-  var sanitized_tag_string = tag_string.replace(" ", "+").replace(/[.,-\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+  var sanitized_tag_string = tag_string.replace(/ /g, "+");
+  console.log(sanitized_tag_string);
+  sanitized_tag_string = sanitized_tag_string.replace(/[.,-\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+  console.log(sanitized_tag_string);
   if (sanitized_tag_string[0] === "+"){
     sanitized_tag_string = sanitized_tag_string.substring(1);
   }
