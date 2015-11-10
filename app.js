@@ -36,15 +36,15 @@ var get_group_options = {
   method: "GET"
 }
 
+// Beta API key
+var GIPHY_API_KEY = "dc6zaTOxFJmzC"
+
 // Giphy Options
 var giphy_options = {
   host: "api.giphy.com",
-  path: "/v1/gifs/random?api_key=" + GIPHY_API_KEY,
+  path: "/v1/gifs/random?api_key=",
   method: "GET"
 }
-
-// Beta API key
-var GIPHY_API_KEY = "dc6zaTOxFJmzC"
 
 // GET Options for weather
 var get_weather_options = {
@@ -388,7 +388,7 @@ function giphySearch(tag_string){
     sanitized_tag_string = sanitized_tag_string.substring(1);
   }
   console.log(sanitized_tag_string);
-  giphy_options.path = giphy_options.path + "&tag=" + sanitized_tag_string;
+  giphy_options.path = giphy_options.path + GIPHY_API_KEY + "&tag=" + sanitized_tag_string;
   console.log(giphy_options.path);
   var get_giphy_random = http.request(giphy_options, function(res){
     var body = '';
