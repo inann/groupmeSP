@@ -17,7 +17,8 @@ var COMMANDS = [
   "help",
   "(╯°□°）╯︵",
   "┻━┻",
-  "weather"
+  "weather",
+  "giphy"
 ];
 
 // Variable holding GroupMe options.
@@ -32,6 +33,16 @@ var post_options = {
 var get_group_options = {
   host: "api.groupme.com",
   path: "/v3/groups/12730452?token=7EW2z2X3PkaQiKXqnM1NBJoadUU5uPgcBYVoKkIF",
+  method: "GET"
+}
+
+// Beta API key
+var GIPHY_API_KEY = "dc6zaTOxFJmzC"
+
+// Giphy Options
+var giphy_options = {
+  host: "api.giphy.com",
+  path: "/v1/gifs/random?api_key=",
   method: "GET"
 }
 
@@ -55,13 +66,11 @@ app.post('/textprocess', function(req, res){
   if(req.body.name != "Bob"){
     var incomingText = req.body.text;
     var commandType = checkForCommand(incomingText);
-    if(commandType && commandType != "weather"){
+    if(commandType && commandType != "weather" && commandType != "ride" && commandType != "giphy"){
       var outputText = processCommand(incomingText, commandType);
-      if(commandType != "ride"){
-        var post_to_group = https.request(post_options, callbackFunction);
-        post_to_group.write(outputText);
-        post_to_group.end();
-      }
+      var post_to_group = https.request(post_options, callbackFunction);
+      post_to_group.write(outputText);
+      post_to_group.end();
     }
   };
 });
@@ -95,18 +104,18 @@ callbackFunction = function(response){
 // Check to see if we should send the message; this
 // is done by checking for certain keywords.
 function checkForCommand(inText){
-  
+
   //If the message does not have "hey bob" (with any caps) just ignore it right away
   if (inText.toLowerCase().indexOf("hey bob") == -1){
     return "";
   }
-  
+
   // parse incoming text
   var parsedText = inText.split(" ");
   // Since we want Bob to not check for anything, we will make sure that the
-  // token we found isn't before 'hey bob'. We'll do this by finding the 'token 
+  // token we found isn't before 'hey bob'. We'll do this by finding the 'token
   // index' of that phrase.
-  
+
   var bobIndex = 0;
   for ( var i = 0; i < parsedText.length; i++ ) {
     if ( parsedText[i].toLowerCase() == "hey" && (i != parsedText.length -1) ){
@@ -122,7 +131,7 @@ function checkForCommand(inText){
   // We know that there has to be a 'Hey Bob' index, since we initially check to
   // see that this is part of the passed in message. Therefore, we can depend on
   // this information being available.
-  
+
   // Here we will compare it to the established constant array. The array will
   // have to be updated per command.
   var resultIndex = -1;
@@ -132,7 +141,7 @@ function checkForCommand(inText){
       break;
     }
   }
-  
+
   switch ( resultIndex ){
     case 0:
         return "command";
@@ -141,6 +150,7 @@ function checkForCommand(inText){
         return "andrew";
         break;
     case 2:
+        setupRides();
         return "ride";
         break;
     case 3:
@@ -156,12 +166,16 @@ function checkForCommand(inText){
         }
         break;
     case 6:
-    //// OMG THIS IS SO HACKY WTF.
     // We should try to do all of the commands in this way, essentially
     // removing the 'processCommand' function. This is the first step along the
     // way; eventually we should remove the check above.
         checkWeather(parsedText[parsedText.indexOf(COMMANDS[6]) + 2]);
         return "weather";
+        break;
+    case 7:
+        giphySearch(inText.substring(inText.toLowerCase().indexOf("giphy") + 5));//parsedText[parsedText.indexOf(COMMANDS[7]) + 1]);
+        return "giphy";
+        break;
     default:
         return "";
         break;
@@ -243,7 +257,7 @@ function setupRides(){
   });
   //post_to_group.write(outputText);
   get_users.end();
-  
+
   return converted;
 };
 
@@ -297,7 +311,7 @@ function printHelp(){
   "Boob                         - tell Andrew to cut that out.\n" +
   "(╯°□°）╯︵ ┻━┻                - Bob will unflip your table for you.\n" +
   "rides                        - pick a random person in the group to drive.\n" +
-  "Bob Help                     - Print this help.\n" + 
+  "Bob Help                     - Print this help.\n" +
   "weather for [location]       - Gets the current weather in [location] in Fahrenheit\n"
   var converted = JSON.stringify({
     bot_id: "e6bfe26f62a4b141c7bdd76425",
@@ -326,7 +340,7 @@ function checkWeather(location){
     bot_id: "e6bfe26f62a4b141c7bdd76425",
     text: message
   });
-  
+
   // Now, before we send back the message, we start a callback
   // that we can have send a message at a later time.
   get_weather_options.path = "/data/2.5/weather?q=" + location + "&units=imperial&APPID=3dc624292d12c666824acad2eec8bbcb"
@@ -345,19 +359,19 @@ function checkWeather(location){
   });
   //post_to_group.write(outputText);
   get_weather.end();
-  
+
   return converted;
 };
 
 function grabWeatherResults(json_results){
   // Parse out the temperature, then send it to the group.
-  var message = ""
+  var message = "";
   if ( json_results.main ){
     message = "The weather in " + json_results.name + " is " + json_results.main.temp + " Fahrenheit";
   } else {
     message = "Woops, that doesn't seem to be a location."
   }
-  
+
   var outputText = JSON.stringify({
     bot_id: "e6bfe26f62a4b141c7bdd76425",
     text: message
@@ -367,3 +381,42 @@ function grabWeatherResults(json_results){
   post_to_group.write(outputText);
   post_to_group.end();
 };
+
+function giphySearch(tag_string){
+  var sanitized_tag_string = tag_string.replace(" ", "+").replace(/[.,-\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+  if (sanitized_tag_string[0] === "+"){
+    sanitized_tag_string = sanitized_tag_string.substring(1);
+  }
+  console.log(sanitized_tag_string);
+  giphy_options.path = "/v1/gifs/random?api_key=" + GIPHY_API_KEY + "&tag=" + sanitized_tag_string;
+  console.log(giphy_options.path);
+  var get_giphy_random = http.request(giphy_options, function(res){
+    var body = '';
+    res.on('data', function(d){
+      body += d;
+    });
+    res.on('end', function(){
+      var json_body = JSON.parse(body);
+      placeGiphyResults(json_body);
+    });
+  });
+  get_giphy_random.end();
+};
+
+function placeGiphyResults(json_results){
+  var message = "";
+  console.log(json_results);
+  if (json_results.data){
+    message = json_results.data.image_url;
+  } else {
+    message = 'failed to get gif';
+  }
+
+  var sending_text = JSON.stringify({
+    bot_id: "e6bfe26f62a4b141c7bdd76425",
+    text: message
+  });
+  var post_to_group = https.request(post_options, callbackFunction);
+  post_to_group.write(sending_text);
+  post_to_group.end();
+}
