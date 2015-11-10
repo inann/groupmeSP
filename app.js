@@ -384,6 +384,9 @@ function grabWeatherResults(json_results){
 
 function giphySearch(tag_string){
   var sanitized_tag_string = tag_string.replace(" ", "+").replace(/[.,-\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+  if (sanitized_tag_string[0] === "+"){
+    sanitized_tag_string = sanitized_tag_string.substring(1);
+  }
   console.log(sanitized_tag_string);
   giphy_options.path = giphy_options.path + "&tag=" + sanitized_tag_string;
   var get_giphy_random = http.request(giphy_options, function(res){
