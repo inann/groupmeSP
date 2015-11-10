@@ -104,18 +104,18 @@ callbackFunction = function(response){
 // Check to see if we should send the message; this
 // is done by checking for certain keywords.
 function checkForCommand(inText){
-  
+
   //If the message does not have "hey bob" (with any caps) just ignore it right away
   if (inText.toLowerCase().indexOf("hey bob") == -1){
     return "";
   }
-  
+
   // parse incoming text
   var parsedText = inText.split(" ");
   // Since we want Bob to not check for anything, we will make sure that the
-  // token we found isn't before 'hey bob'. We'll do this by finding the 'token 
+  // token we found isn't before 'hey bob'. We'll do this by finding the 'token
   // index' of that phrase.
-  
+
   var bobIndex = 0;
   for ( var i = 0; i < parsedText.length; i++ ) {
     if ( parsedText[i].toLowerCase() == "hey" && (i != parsedText.length -1) ){
@@ -131,7 +131,7 @@ function checkForCommand(inText){
   // We know that there has to be a 'Hey Bob' index, since we initially check to
   // see that this is part of the passed in message. Therefore, we can depend on
   // this information being available.
-  
+
   // Here we will compare it to the established constant array. The array will
   // have to be updated per command.
   var resultIndex = -1;
@@ -141,7 +141,7 @@ function checkForCommand(inText){
       break;
     }
   }
-  
+
   switch ( resultIndex ){
     case 0:
         return "command";
@@ -257,7 +257,7 @@ function setupRides(){
   });
   //post_to_group.write(outputText);
   get_users.end();
-  
+
   return converted;
 };
 
@@ -311,7 +311,7 @@ function printHelp(){
   "Boob                         - tell Andrew to cut that out.\n" +
   "(╯°□°）╯︵ ┻━┻                - Bob will unflip your table for you.\n" +
   "rides                        - pick a random person in the group to drive.\n" +
-  "Bob Help                     - Print this help.\n" + 
+  "Bob Help                     - Print this help.\n" +
   "weather for [location]       - Gets the current weather in [location] in Fahrenheit\n"
   var converted = JSON.stringify({
     bot_id: "e6bfe26f62a4b141c7bdd76425",
@@ -340,7 +340,7 @@ function checkWeather(location){
     bot_id: "e6bfe26f62a4b141c7bdd76425",
     text: message
   });
-  
+
   // Now, before we send back the message, we start a callback
   // that we can have send a message at a later time.
   get_weather_options.path = "/data/2.5/weather?q=" + location + "&units=imperial&APPID=3dc624292d12c666824acad2eec8bbcb"
@@ -359,7 +359,7 @@ function checkWeather(location){
   });
   //post_to_group.write(outputText);
   get_weather.end();
-  
+
   return converted;
 };
 
@@ -371,7 +371,7 @@ function grabWeatherResults(json_results){
   } else {
     message = "Woops, that doesn't seem to be a location."
   }
-  
+
   var outputText = JSON.stringify({
     bot_id: "e6bfe26f62a4b141c7bdd76425",
     text: message
@@ -401,12 +401,13 @@ function giphySearch(tag_string){
 
 function placeGiphyResults(json_results){
   var message = "";
+  console.log(json_results);
   if (json_results.data){
     message = json_results.data.image_url;
   } else {
     message = 'failed to get gif';
   }
-  
+
   var sending_text = JSON.stringify({
     bot_id: "e6bfe26f62a4b141c7bdd76425",
     text: message
